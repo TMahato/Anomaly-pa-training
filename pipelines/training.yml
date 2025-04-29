@@ -5,10 +5,8 @@ metadata:
   annotations:
     scenarios.ai.sap.com/name: "Anomaly Detection Scenario"
     scenarios.ai.sap.com/description: "Pipeline for anomaly detection training using PyCaret"
-    
     executables.ai.sap.com/name: "Anomaly Detection Model Training"
     executables.ai.sap.com/description: "Trains anomaly detection models on time series data"
-    
     artifacts.ai.sap.com/anomalymodel.kind: "model"
   labels:
     scenarios.ai.sap.com/id: "anomaly-detection-scenario"
@@ -52,22 +50,47 @@ spec:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
-              name: aws-secret
-              key: access-key
+              name: training-secret
+              key: AWS_ACCESS_KEY_ID
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
-              name: aws-secret
-              key: secret-key
+              name: training-secret
+              key: AWS_SECRET_ACCESS_KEY
         - name: AWS_REGION
           valueFrom:
             secretKeyRef:
-              name: aws-secret
-              key: region
+              name: training-secret
+              key: AWS_REGION
         - name: BUCKET_NAME
           valueFrom:
             secretKeyRef:
-              name: aws-secret
-              key: bucket-name
+              name: training-secret
+              key: BUCKET_NAME
+        - name: DATABASE_URI
+          valueFrom:
+            secretKeyRef:
+              name: training-secret
+              key: DATABASE_URI
+        - name: token_api
+          valueFrom:
+            secretKeyRef:
+              name: training-secret
+              key: token_api
+        - name: message_queue
+          valueFrom:
+            secretKeyRef:
+              name: training-secret
+              key: message_queue
+        - name: api_url1
+          valueFrom:
+            secretKeyRef:
+              name: training-secret
+              key: api_url1
+        - name: api_url2
+          valueFrom:
+            secretKeyRef:
+              name: training-secret
+              key: api_url2
       args:
         - "python /app/src/main.py"
