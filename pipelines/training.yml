@@ -15,7 +15,7 @@ metadata:
     ai.sap.com/version: "1.0"
 spec:
   imagePullSecrets:
-    - name: docker-credentials
+    - name: tanmay-credentials
   entrypoint: anomaly-pipeline
   arguments:
     parameters:
@@ -36,7 +36,7 @@ spec:
           archive:
             none: {}
     container:
-      image: your-docker-registry/anomaly-detection-image:latest
+      image: docker.io/tanmay471/anamoly_train
       command: ["/bin/sh", "-c"]
       env:
         - name: PLANT
