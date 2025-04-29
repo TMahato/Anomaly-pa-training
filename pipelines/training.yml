@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: anomaly-detection-pipeline
+  annotations:
+    scenarios.ai.sap.com/name: "Anomaly Detection Scenario"
+    scenarios.ai.sap.com/description: "Pipeline for anomaly detection training using PyCaret"
+    
+    executables.ai.sap.com/name: "Anomaly Detection Model Training"
+    executables.ai.sap.com/description: "Trains anomaly detection models on time series data"
+    
+    artifacts.ai.sap.com/anomalymodel.kind: "model"
+  labels:
+    scenarios.ai.sap.com/id: "anomaly-detection-scenario"
+    ai.sap.com/version: "1.0"
+spec:
+  imagePullSecrets:
+    - name: docker-credentials
+  entrypoint: anomaly-pipeline
+  arguments:
+    parameters:
+      - name: PLANT
+      - name: GUID
+      - name: NODE_PARAMETERS
+        default: "{}"
+      - name: NODE_ID
+      - name: ALGORITHM
+        default: "iforest"
+  templates:
+  - name: anomaly-pipeline
+    outputs:
+      artifacts:
+        - name: anomalymodel
+          globalName: anomalymodel
+          path: /app/model/
+          archive:
+            none: {}
+    container:
+      image: your-docker-registry/anomaly-detection-image:latest
+      command: ["/bin/sh", "-c"]
+      env:
+        - name: PLANT
+          value: "{{workflow.parameters.PLANT}}"
+        - name: GUID
+          value: "{{workflow.parameters.GUID}}"
+        - name: NODE_PARAMETERS
+          value: "{{workflow.parameters.NODE_PARAMETERS}}"
+        - name: NODE_ID
+          value: "{{workflow.parameters.NODE_ID}}"
+        - name: ALGORITHM
+          value: "{{workflow.parameters.ALGORITHM}}"
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: access-key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: secret-key
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: region
+        - name: BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: bucket-name
+      args:
+        - "python /app/src/main.py"
