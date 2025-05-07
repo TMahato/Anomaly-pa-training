@@ -3,3 +3,5 @@
 
 # Kubernetes secrets
 training-secret.yaml
+
+default-object-store-secret.yaml
