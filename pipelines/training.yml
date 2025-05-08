@@ -1,96 +1,36 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: anomaly-detection-pipeline
+  name: anomaly-training-pipeline
+  namespace: mt-262dc357
   annotations:
-    scenarios.ai.sap.com/name: "Anomaly Detection Scenario"
-    scenarios.ai.sap.com/description: "Pipeline for anomaly detection training using PyCaret"
-    executables.ai.sap.com/name: "Anomaly Detection Model Training"
-    executables.ai.sap.com/description: "Trains anomaly detection models on time series data"
+    scenarios.ai.sap.com/name: "Anomaly Training Scenario"
+    scenarios.ai.sap.com/description: "Pipeline for anomaly detection"
+    executables.ai.sap.com/name: "Anomaly Model Training"
+    executables.ai.sap.com/description: "Trains anomaly detection models"
     artifacts.ai.sap.com/anomalymodel.kind: "model"
   labels:
-    scenarios.ai.sap.com/id: "anomaly-detection-scenario"
+    scenarios.ai.sap.com/id: "anomaly-training-scenario"
     ai.sap.com/version: "1.0"
 spec:
   imagePullSecrets:
     - name: tanmay-credentials
   entrypoint: anomaly-pipeline
-  arguments:
-    parameters:
-      - name: PLANT
-      - name: GUID
-      - name: NODE_PARAMETERS
-        default: "{}"
-      - name: NODE_ID
-      - name: ALGORITHM
-        default: "iforest"
   templates:
-  - name: anomaly-pipeline
-    outputs:
-      artifacts:
-        - name: anomalymodel
-          globalName: anomalymodel
-          path: /app/model/
-          archive:
-            none: {}
-    container:
-      image: docker.io/tanmay471/anamoly_train:01
-      command: ["/bin/sh", "-c"]
-      env:
-        - name: PLANT
-          value: "{{workflow.parameters.PLANT}}"
-        - name: GUID
-          value: "{{workflow.parameters.GUID}}"
-        - name: NODE_PARAMETERS
-          value: "{{workflow.parameters.NODE_PARAMETERS}}"
-        - name: NODE_ID
-          value: "{{workflow.parameters.NODE_ID}}"
-        - name: ALGORITHM
-          value: "{{workflow.parameters.ALGORITHM}}"
-        - name: AWS_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: AWS_ACCESS_KEY_ID
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: AWS_SECRET_ACCESS_KEY
-        - name: AWS_REGION
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: AWS_REGION
-        - name: BUCKET_NAME
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: BUCKET_NAME
-        - name: DATABASE_URI
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: DATABASE_URI
-        - name: token_api
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: token_api
-        - name: message_queue
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: message_queue
-        - name: api_url1
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: api_url1
-        - name: api_url2
-          valueFrom:
-            secretKeyRef:
-              name: training-secret
-              key: api_url2
-      args:
-        - "python /app/src/main.py"
+    - name: anomaly-pipeline
+      inputs:
+        artifacts:
+          - name: trainingdata
+            path: /app/data/
+      outputs:
+        artifacts:
+          - name: anomalymodel
+            globalName: anomalymodel
+            path: /app/aicore-models
+            archive:
+              none: {}
+      container:
+        image: docker.io/tanmay471/anamoly_train:01
+        command: ["/bin/sh", "-c"]
+        args:
+          - "python /app/src/main.py"
