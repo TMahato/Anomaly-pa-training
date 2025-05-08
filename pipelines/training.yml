@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: anomaly-training-pipeline
+  name: anomaly-aicore-training-pipeline
   namespace: mt-262dc357
   annotations:
-    scenarios.ai.sap.com/name: "Anomaly Training Scenario"
+    scenarios.ai.sap.com/name: "Anomaly AI Core Training Scenario"
     scenarios.ai.sap.com/description: "Pipeline for anomaly detection"
-    executables.ai.sap.com/name: "Anomaly Model Training"
+    executables.ai.sap.com/name: "Anomaly AI Core Model Training"
     executables.ai.sap.com/description: "Trains anomaly detection models"
     artifacts.ai.sap.com/anomalymodel.kind: "model"
   labels:
-    scenarios.ai.sap.com/id: "anomaly-training-scenario"
+    scenarios.ai.sap.com/id: "anomaly-aicore-training-scenario"
     ai.sap.com/version: "1.0"
 spec:
   imagePullSecrets:
@@ -24,8 +24,8 @@ spec:
             path: /app/data/
       outputs:
         artifacts:
-          - name: anomalymodel
-            globalName: anomalymodel
+          - name: anomalyaicoremodel
+            globalName: anomalyaicoremodel
             path: /app/aicore-models
             archive:
               none: {}

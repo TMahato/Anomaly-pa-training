@@ -16,7 +16,7 @@ def main():
     print(f"Algorithms: {algorithms}")
 
     # Path to local dataset (mounted artifact)
-    input_path = "/app/data/input.csv"
+    input_path = "/app/data/Anomalydata.csv"
     try:
         df = pd.read_csv(input_path)
         print(f"✅ Loaded training data: {df.shape[0]} rows, {df.shape[1]} columns")
@@ -32,7 +32,7 @@ def main():
             s = setup(data=df, verbose=False)
             model = create_model(algorithm)
             result = assign_model(model)
-            print("✅ Model created and assigned")
+            print("Model created and assigned")
 
             # Save model to /app/model (for AI Core to capture as output artifact)
             model_dir = '/app/model'
@@ -42,7 +42,7 @@ def main():
             with open(model_path, 'wb') as f:
                 pickle.dump(model, f)
 
-            print(f"📦 Model saved to {model_path}")
+            print(f"Model saved to {model_path}")
 
             scores = result['Anomaly_Score']
             mean_normal = Decimal(float(scores[result['Anomaly'] == 0].mean())).quantize(Decimal('0.000'), rounding=ROUND_HALF_UP)
@@ -55,7 +55,7 @@ def main():
             }
 
         except Exception as e:
-            print(f"❌ Error training model {algorithm}: {e}")
+            print(f"Error training model {algorithm}: {e}")
             raise
 
     # Save metadata
@@ -69,7 +69,7 @@ def main():
             'model_results': model_results
         }, f)
 
-    print(f"✅ Training completed. Metadata saved at {metadata_path}")
+    print(f"Training completed. Metadata saved at {metadata_path}")
 
 if __name__ == "__main__":
     main()

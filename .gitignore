@@ -5,3 +5,6 @@
 training-secret.yaml
 
 default-object-store-secret.yaml
+
+venv
+
