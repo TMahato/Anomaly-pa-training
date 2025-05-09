@@ -6,9 +6,9 @@ from pycaret.anomaly import setup, create_model, assign_model
 
 def main():
     # Define constants (no env vars)
-    guid = "local-guid"
+    guid = "4322"
     node_parameters = "Current,Speed,Temperature,Vibration"
-    node_id = "local-node-id"
+    node_id = "id-1724928852427-264"
     algorithms = ["abod"]  # you can add more if needed
 
     print(f"Node Parameters: {node_parameters}")
@@ -19,9 +19,9 @@ def main():
     input_path = "/app/data/Anomalydata.csv"
     try:
         df = pd.read_csv(input_path)
-        print(f"✅ Loaded training data: {df.shape[0]} rows, {df.shape[1]} columns")
+        print(f"Loaded training data: {df.shape[0]} rows, {df.shape[1]} columns")
     except Exception as e:
-        print(f"❌ Failed to read training data: {e}")
+        print(f"Failed to read training data: {e}")
         raise
 
     # Training logic
