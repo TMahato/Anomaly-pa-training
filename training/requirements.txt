@@ -1,7 +1,11 @@
 pandas==1.5.3
 pycaret==3.0.0
-scikit-learn==1.0.2
+scikit-learn>=1.2,<1.3
 numpy
 matplotlib
 scipy==1.9.3
-joblib>=1.2.0
+joblib==1.3.2
+lightgbm
+pyod
+numba
+seaborn
