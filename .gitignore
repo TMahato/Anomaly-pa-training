@@ -8,3 +8,5 @@ default-object-store-secret.yaml
 
 venv
 
+logs.log
+

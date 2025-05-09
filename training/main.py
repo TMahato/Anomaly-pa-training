@@ -16,7 +16,7 @@ def main():
     print(f"Algorithms: {algorithms}")
 
     # Path to local dataset (mounted artifact)
-    input_path = "/app/data/Anomalydata.csv"
+    input_path = "Anomalydata.csv"
     try:
         df = pd.read_csv(input_path)
         print(f"Loaded training data: {df.shape[0]} rows, {df.shape[1]} columns")
