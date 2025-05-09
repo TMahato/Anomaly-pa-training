@@ -2,7 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: anomaly-aicore-training-pipeline
-  namespace: mt-262dc357
   annotations:
     scenarios.ai.sap.com/name: "Anomaly AI Core Training Scenario"
     scenarios.ai.sap.com/description: "Pipeline for anomaly detection"
