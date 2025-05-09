@@ -38,7 +38,7 @@ def main():
             # Save model to /app/model (for AI Core to capture as output artifact)
             model_dir = '/app/model'
             os.makedirs(model_dir, exist_ok=True)
-            model_path = posixpath.join(model_dir, f'{guid}_{algorithm}.pkl')
+            model_path = os.path.join(model_dir, f'{guid}_{algorithm}.pkl')
             print("model_path", model_path)
 
             with open(model_path, 'wb') as f:
@@ -61,7 +61,7 @@ def main():
             raise
 
     # Save metadata
-    metadata_path = posixpath.join(model_dir, f'{guid}_metadata.pkl')
+    metadata_path = os.path.join(model_dir, f'{guid}_metadata.pkl')
     print("metadata_path", metadata_path)
     with open(metadata_path, 'wb') as f:
         pickle.dump({
