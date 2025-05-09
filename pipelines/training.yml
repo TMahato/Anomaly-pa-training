@@ -26,7 +26,7 @@ spec:
         artifacts:
           - name: anomalyaicoremodel
             globalName: anomalyaicoremodel
-            path: /app/aicore-models
+            path: /app/model
             archive:
               none: {}
       container:
