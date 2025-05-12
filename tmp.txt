@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: anomaly-aicore-training-pipeline
+  annotations:
+    scenarios.ai.sap.com/name: "Anomaly AI Core Training Scenario"
+    scenarios.ai.sap.com/description: "Pipeline for anomaly detection"
+    executables.ai.sap.com/name: "Anomaly AI Core Model Training"
+    executables.ai.sap.com/description: "Trains anomaly detection models"
+    artifacts.ai.sap.com/anomalymodel.kind: "model"
+  labels:
+    scenarios.ai.sap.com/id: "anomaly-aicore-training-scenario"
+    ai.sap.com/version: "1.0"
+spec:
+  imagePullSecrets:
+    - name: tanmay-credentials
+  entrypoint: anomaly-pipeline
+  templates:
+    - name: anomaly-pipeline
+      inputs:
+        artifacts:
+          - name: trainingdata
+            path: /app/data/
+      outputs:
+        artifacts:
+          - name: anomalyaicoremodel
+            globalName: anomalyaicoremodel
+            path: /app/model
+            archive:
+              none: {}
+      container:
+        image: docker.io/tanmay471/anamoly_train:01
+        command: ["/bin/sh", "-c"]
+        args:
+          - "python /app/src/main.py"
