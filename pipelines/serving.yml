@@ -41,7 +41,7 @@ spec:
             command: ["/bin/sh", "-c"]
             args:
               - >
-                set -e && echo "Starting" && gunicorn --chdir /app/src main:app -b 0.0.0.0:9001
+                set -e && echo "Starting" && gunicorn --chdir /app main:app -b 0.0.0.0:9001
             env:
               - name: STORAGE_URI
                 value: "{{inputs.artifacts.anomalyaicoremodel}}"
