@@ -1,7 +1,8 @@
 docker build -t docker.io/tanmay471/anamoly_train:01 .
 docker push docker.io/tanmay471/anamoly_train:01
 
-
+docker build -t docker.io/tanmay471/anamoly_serve:01 .
+docker push docker.io/tanmay471/anamoly_serve:01
 
 aws s3 cp Anomalydata.csv s3://hcp-82ae1d6d-738a-4742-a426-18a7e34f840f/anomalyaicoremodel/data/Anomalydata.csv
 aws s3api put-object --bucket hcp-82ae1d6d-738a-4742-a426-18a7e34f840f --key anomalyaicoremodel/model/ --content-type "application/x-directory"

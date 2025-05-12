@@ -1,0 +1,47 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: anomaly-serving-pipeline
+  annotations:
+    scenarios.ai.sap.com/name: "Anomaly Detection Serving Scenario"
+    scenarios.ai.sap.com/description: "Serve trained anomaly detection model using SAP AI Core"
+
+    executables.ai.sap.com/name: "anomalymodelserving"
+    executables.ai.sap.com/description: "Serving endpoint for anomaly detection model"
+
+    artifacts.ai.sap.com/anomalymodel.kind: "model"
+  labels:
+    scenarios.ai.sap.com/id: "anomaly-aicore-training-scenario"
+    ai.sap.com/version: "1.0"
+spec:
+  inputs:
+    artifacts:
+      - name: anomalyaicoremodel
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/target: 1
+        autoscaling.knative.dev/targetBurstCapacity: 0
+      labels: |
+        ai.sap.com/resourcePlan: starter
+    spec: |
+      predictor:
+        imagePullSecrets:
+          - name: tanmay-credentials
+        minReplicas: 1
+        maxReplicas: 3
+        containers:
+          - name: kserve-container
+            image: docker.io/tanmay471/anamoly_serve:01
+            ports:
+              - containerPort: 9001
+                protocol: TCP
+            command: ["/bin/sh", "-c"]
+            args:
+              - >
+                set -e && echo "Starting" && gunicorn --chdir /app/src main:app -b 0.0.0.0:9001
+            env:
+              - name: STORAGE_URI
+                value: "{{inputs.artifacts.anomalymodel}}"
